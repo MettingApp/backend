@@ -25,7 +25,7 @@ public class Result {
 
     public static Result ERROR(ErrorCodeInterface errorCodeInterface){
         return Result.builder()
-                .resultCode(errorCodeInterface.getStatus())
+                .resultCode(errorCodeInterface.getStatus().value())
                 .resultMessage(errorCodeInterface.getErrorCode())
                 .resultDescription("오류가 발생하였습니다.")
                 .build();
@@ -33,7 +33,7 @@ public class Result {
 
     public static Result ERROR(ErrorCodeInterface errorCodeInterface, Throwable tx){
         return Result.builder()
-                .resultCode(errorCodeInterface.getStatus())
+                .resultCode(errorCodeInterface.getStatus().value())
                 .resultMessage(errorCodeInterface.getDescription())
                 .resultDescription(tx.getLocalizedMessage())
                 .build();
@@ -41,7 +41,7 @@ public class Result {
 
     public static Result ERROR(ErrorCodeInterface errorCodeInterface, String description){
         return Result.builder()
-                .resultCode(errorCodeInterface.getStatus())
+                .resultCode(errorCodeInterface.getStatus().value())
                 .resultMessage(errorCodeInterface.getErrorCode())
                 .resultDescription(errorCodeInterface.getDescription())
                 .build();

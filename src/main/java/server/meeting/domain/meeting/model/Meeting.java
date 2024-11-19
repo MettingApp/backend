@@ -17,22 +17,23 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "MEETING")
 public class Meeting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meetingId")
+    @Column(name = "meeting_id")
     private Long id;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Size(min = 8, max = 12)
-    @Column(length = 10, nullable = false)
+    @Column(name = "date_column", length = 10, nullable = false)
     private LocalDate date;
 
     @NotNull
     @Size(max = 3)
-    @Column(length = 5, nullable = false)
+    @Column(name = "day_column", length = 5, nullable = false)
     private String day;
 
     @NotNull
@@ -50,7 +51,7 @@ public class Meeting extends BaseEntity {
     @Column(length = 500)
     private String recommendKeyword;
 
-    @OneToMany(mappedBy = "meetingId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "meeting")
     private List<Member> participants = new ArrayList<>();
 
 }

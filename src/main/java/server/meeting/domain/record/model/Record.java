@@ -35,7 +35,7 @@ public class Record extends BaseEntity {
     private String recordFile;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meetingId")
+    @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
     @Builder
