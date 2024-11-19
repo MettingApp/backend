@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.OK;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public enum ErrorType implements ErrorCodeInterface {
 
     _OK(OK, "200", "성공");
