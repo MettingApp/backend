@@ -1,13 +1,11 @@
 package server.meeting.global.api;
 
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import server.meeting.global.error.ErrorCodeInterface;
 
-@Data
+@Getter
+@ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Api<T> {
