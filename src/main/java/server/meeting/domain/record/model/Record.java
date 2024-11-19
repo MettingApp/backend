@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
@@ -37,9 +38,12 @@ public class Record extends BaseEntity {
     @JoinColumn(name = "meetingId")
     private Meeting meeting;
 
+    @Builder
     public Record(String fileName, String originalFileName, String recordFile) {
-        this.fileName = fileName;
-        this.originalFileName = originalFileName;
-        this.recordFile = recordFile;
+        Record.builder()
+                .fileName(fileName)
+                .originalFileName(originalFileName)
+                .recordFile(recordFile)
+                .build();
     }
 }
