@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.domain.team.model.Team;
 import server.meeting.global.common.BaseEntity;
 
@@ -26,5 +27,7 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Meeting meeting;
 
 }
