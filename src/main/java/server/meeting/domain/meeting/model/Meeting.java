@@ -52,6 +52,6 @@ public class Meeting extends BaseEntity {
     private String recommendKeyword;
 
     @OneToMany(mappedBy = "meeting")
-    private List<Member> participants = new ArrayList<>();
+    private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
 }

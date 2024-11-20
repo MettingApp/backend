@@ -1,4 +1,4 @@
-package server.meeting.global.config.JpaConfig;
+package server.meeting.global.config.jpaConfig;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
