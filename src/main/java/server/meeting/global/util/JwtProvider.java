@@ -18,9 +18,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import server.meeting.global.common.TokenDto;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -98,7 +102,7 @@ public class JwtProvider {
     public String createAccessToken(String username, String role) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLE_PREFIX,role);
+        claims.put(ROLE_PREFIX, role);
 
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)
