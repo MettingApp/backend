@@ -1,6 +1,10 @@
 package server.meeting.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +16,7 @@ import server.meeting.domain.member.repository.MemberRepository;
 import server.meeting.global.common.TokenDto;
 import server.meeting.global.error.ErrorType;
 import server.meeting.global.exception.ApiException;
+import server.meeting.global.util.JwtProvider;
 
 import static server.meeting.global.error.ErrorType.*;
 
@@ -22,6 +27,8 @@ public class MemberServiceImp implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     @Override
@@ -53,6 +60,12 @@ public class MemberServiceImp implements MemberService {
     @Transactional
     @Override
     public TokenDto signIn(MemberSignUpRequestDto request) {
-        return null;
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return jwtProvider.generateToken(authentication);
     }
 }

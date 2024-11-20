@@ -60,14 +60,12 @@ public class JwtProvider {
                 .parseClaimsJws(token);
         return true;
     }
+    
+    public TokenDto generateToken(Authentication authentication) {
+        String authority = convertAuthorityFrom(authentication);
 
-    public TokenDto generateToken(String username, List<String> roles) {
-        List<SimpleGrantedAuthority> authorities = convertRolesToAuthorities(roles);
-
-        String role = getGeneralRoleFrom(authorities);
-
-        String refreshToken = createRefreshToken(username, role);
-        String accessToken = createAccessToken(username, role);
+        String refreshToken = createRefreshToken(authentication.getName(), authority);
+        String accessToken = createAccessToken(authentication.getName(), authority);
 
         return TokenDto.builder()
                 .accessToken(accessToken)
@@ -75,22 +73,16 @@ public class JwtProvider {
                 .build();
     }
 
-    private List<SimpleGrantedAuthority> convertRolesToAuthorities(List<String> roles) {
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-    }
-
-    private String getGeneralRoleFrom(List<SimpleGrantedAuthority> authorities) {
-        return authorities.stream()
+    private String convertAuthorityFrom(Authentication authentication) {
+        return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
     }
 
-    public String createRefreshToken(String username, String role) {
+    public String createRefreshToken(String username, String authority) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLE_PREFIX, role);
+        claims.put(ROLE_PREFIX, authority);
 
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)
@@ -99,10 +91,10 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String createAccessToken(String username, String role) {
+    public String createAccessToken(String username, String authority) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLE_PREFIX, role);
+        claims.put(ROLE_PREFIX, authority);
 
         return BEARER_PREFIX + Jwts.builder()
                 .setClaims(claims)
