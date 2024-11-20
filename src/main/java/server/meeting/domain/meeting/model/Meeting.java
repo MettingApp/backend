@@ -51,7 +51,7 @@ public class Meeting extends BaseEntity {
     @Column(length = 500)
     private String recommendKeyword;
 
-    @OneToMany(mappedBy = "meeting")
-    private List<Member> participants = new ArrayList<>();
+    @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
 }

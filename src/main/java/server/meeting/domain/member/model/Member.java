@@ -5,8 +5,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.meeting.domain.meeting.model.Meeting;
+import server.meeting.domain.meeting.model.MeetingMembers;
 import server.meeting.domain.team.model.Team;
 import server.meeting.global.common.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,7 +31,7 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Meeting meeting;
+    @OneToMany(mappedBy = "member")
+    private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
 }
