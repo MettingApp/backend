@@ -60,7 +60,7 @@ public class JwtProvider {
                 .parseClaimsJws(token);
         return true;
     }
-    
+
     public TokenDto generateToken(Authentication authentication) {
         String authority = convertAuthorityFrom(authentication);
 

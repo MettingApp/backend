@@ -16,11 +16,11 @@ import server.meeting.global.util.JwtProvider;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig{
+public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
 
-    public static final String[] ALLOWED_URL = {"/api/v1/member/sign-up"};
+    public static final String[] ALLOWED_URL = {"/api/v1/member/sign-up", "/api/v1/member/sign-in"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
