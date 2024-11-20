@@ -20,7 +20,7 @@ public class SecurityConfig{
 
     private final JwtProvider jwtProvider;
 
-    public static final String[] ALLOWED_URL = {};
+    public static final String[] ALLOWED_URL = {"/api/v1/member/sign-up"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

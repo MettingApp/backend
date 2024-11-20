@@ -23,7 +23,7 @@ public class MemberSignUpRequestDto {
     private String checkedPassword;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Size(min = 2, message = "닉네임은 최소 2자 이상으로 입력해주세요.")
+    @Size(min = 2, max = 16, message = "닉네임 길이는 2 ~ 16 사이로 입력해주세요.")
     private String nickname;
 
 }

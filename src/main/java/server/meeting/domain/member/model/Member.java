@@ -26,7 +26,8 @@ public class Member extends BaseEntity {
 
     private String username;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
@@ -34,4 +35,14 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
+    private Member(Role role, String username, String password, String nickname) {
+        this.role = role;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
+    public static Member of(Role role, String username, String password, String nickname) {
+        return new Member(role, username, password, nickname);
+    }
 }
