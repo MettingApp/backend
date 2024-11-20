@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import server.meeting.global.filter.JwtAuthFilter;
+import server.meeting.global.util.JwtProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -18,7 +19,6 @@ import server.meeting.global.filter.JwtAuthFilter;
 public class SecurityConfig{
 
     private final JwtProvider jwtProvider;
-    private final JwtAuthFilter jwtAuthFilter;
 
     public static final String[] ALLOWED_URL = {};
 

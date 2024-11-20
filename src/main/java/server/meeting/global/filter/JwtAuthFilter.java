@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import server.meeting.global.api.Api;
 import server.meeting.global.api.Result;
 import server.meeting.global.error.ErrorType;
+import server.meeting.global.util.JwtProvider;
 
 import java.io.IOException;
 
