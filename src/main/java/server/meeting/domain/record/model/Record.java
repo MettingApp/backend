@@ -26,16 +26,10 @@ public class Record extends BaseEntity {
     private String fileName;
 
     @NotNull
-    @Size(max = 100)
-    @Column(length = 100, nullable = false)
-    private String originalFileName;
-
-    @NotNull
     @Column(length = 2083, nullable = false)
     private String recordFile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meeting_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private Meeting meeting;
 
     @Builder

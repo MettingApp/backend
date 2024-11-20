@@ -20,9 +20,9 @@ public class MeetingController {
 
     private final MeetingService meetingService;
 
-    @PostMapping
-    public Api<String> createMeeting(@RequestPart @Valid MeetingCreateReq req,
-                                     @RequestPart MultipartFile file) {
-
-    }
+//    @PostMapping
+//    public Api<String> createMeeting(@RequestPart @Valid MeetingCreateReq req,
+//                                     @RequestPart MultipartFile file) {
+//
+//    }
 }
