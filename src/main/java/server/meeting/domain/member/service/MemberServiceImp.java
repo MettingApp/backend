@@ -38,7 +38,7 @@ public class MemberServiceImp implements MemberService {
         validatePasswordMatch(request.getPassword(), request.getCheckedPassword());
         String encodingPassword = passwordEncoder.encode(request.getPassword());
 
-        Member member = Member.of(Role.USER, request.getUsername(), encodingPassword, request.getNickname());
+        Member member = Member.of(Role.USER, request.getUsername(), encodingPassword, request.getNickname(),request.getName());
         memberRepository.save(member);
 
         return MemberSignUpResponseDto.builder()

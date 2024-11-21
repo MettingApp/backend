@@ -26,4 +26,8 @@ public class MemberSignUpRequestDto {
     @Size(min = 2, max = 16, message = "닉네임 길이는 2 ~ 16 사이로 입력해주세요.")
     private String nickname;
 
+    @NotBlank(message = "이름을 입력해주세요.")
+    private String name;
+
+
 }

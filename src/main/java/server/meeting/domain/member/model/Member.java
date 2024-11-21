@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.domain.meeting.model.MeetingMembers;
 import server.meeting.domain.team.model.Team;
 import server.meeting.global.common.BaseEntity;
@@ -20,12 +19,19 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
-
-    private String password;
-
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -35,14 +41,15 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
-    private Member(Role role, String username, String password, String nickname) {
+    private Member(Role role, String username, String password, String nickname, String name) {
         this.role = role;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.name = name;
     }
 
-    public static Member of(Role role, String username, String password, String nickname) {
-        return new Member(role, username, password, nickname);
+    public static Member of(Role role, String username, String password, String nickname, String name) {
+        return new Member(role, username, password, nickname, name);
     }
 }
