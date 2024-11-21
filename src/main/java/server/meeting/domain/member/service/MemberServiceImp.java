@@ -1,5 +1,6 @@
 package server.meeting.domain.member.service;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,6 +36,7 @@ public class MemberServiceImp implements MemberService {
     @Override
     public MemberSignUpResponseDto signUp(MemberSignUpRequestDto request) {
         validateDuplicateUsername(request.getUsername());
+        validateDuplicateName(request.getName());
         validatePasswordMatch(request.getPassword(), request.getCheckedPassword());
         String encodingPassword = passwordEncoder.encode(request.getPassword());
 
@@ -44,6 +46,12 @@ public class MemberServiceImp implements MemberService {
         return MemberSignUpResponseDto.builder()
                 .description("회원가입에 성공했습니다.")
                 .build();
+    }
+
+    private void validateDuplicateName(String name) {
+        if (memberRepository.existsMemberByName(name)) {
+            throw new ApiException(_CONFLICT_USERNAME);
+        }
     }
 
     private void validateDuplicateUsername(String username) {
