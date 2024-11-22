@@ -52,4 +52,8 @@ public class Member extends BaseEntity {
     public static Member of(Role role, String username, String password, String nickname, String name) {
         return new Member(role, username, password, nickname, name);
     }
+
+    public void linkTeam(Team team){
+        this.team = team;
+    }
 }
