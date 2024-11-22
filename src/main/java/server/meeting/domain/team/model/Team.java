@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import server.meeting.domain.member.model.Member;
 import server.meeting.global.common.BaseEntity;
 
+import java.util.UUID;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -31,26 +33,28 @@ public class Team extends BaseEntity {
     private Member member;
 
 
-    public static Team of(String name, String title, String description, String inviteCode, Member member) {
+    public static Team of(String name, String title, String description, Member member) {
         Team team = Team.builder()
                 .name(name)
                 .title(title)
                 .description(description)
-                .inviteCode(inviteCode)
                 .build();
 
         team.connectMember(member);
+
+        team.generateInviteCode();
 
         return team;
     }
 
     @Builder
-    private Team(String name, String title, String description, String inviteCode, Member member) {
+    private Team(String name, String title, String description, Member member) {
         this.name = name;
         this.title = title;
         this.description = description;
-        this.inviteCode = inviteCode;
         this.member = member;
+
+        this.generateInviteCode();
     }
 
     public void connectMember(Member member) {
@@ -59,5 +63,9 @@ public class Team extends BaseEntity {
         }
         this.member = member;
         member.linkTeam(this);
+    }
+
+    private void generateInviteCode() {
+        this.inviteCode = UUID.randomUUID().toString();
     }
 }

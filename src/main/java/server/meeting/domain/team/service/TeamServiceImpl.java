@@ -1,14 +1,23 @@
 package server.meeting.domain.team.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.meeting.domain.member.model.Member;
 import server.meeting.domain.member.repository.MemberRepository;
 import server.meeting.domain.team.dto.TeamCreateRequestDto;
 import server.meeting.domain.team.dto.TeamCreateResponseDto;
 import server.meeting.domain.team.dto.TeamDetailResponse;
 import server.meeting.domain.team.dto.TeamListResponseDto;
+import server.meeting.domain.team.model.Team;
 import server.meeting.domain.team.repository.TeamRepository;
+import server.meeting.global.error.ErrorType;
+import server.meeting.global.exception.ApiException;
+
+import java.util.IllformedLocaleException;
+
+import static server.meeting.global.error.ErrorType._NOT_FOUND_MEMBER;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +28,14 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Override
-    public TeamCreateResponseDto createTeam(String username, TeamCreateRequestDto teamCreateRequestDto) {
+    public TeamCreateResponseDto createTeam(String username, TeamCreateRequestDto dto) {
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
 
-        return null;
+        Team team = Team.of(dto.getName(), dto.getTitle(), dto.getDescription(), member);
+        teamRepository.save(team);
+
+        return TeamCreateResponseDto.toDtoFrom(team);
     }
 
     @Override

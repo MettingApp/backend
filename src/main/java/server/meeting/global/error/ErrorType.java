@@ -20,6 +20,7 @@ public enum ErrorType implements ErrorCodeInterface {
     _CONFLICT_USERNAME(CONFLICT, "409", "이미 존재하는 아이디 입니다."),
     _CONFLICT_NAME(CONFLICT, "409", "이미 존재하는 닉네임 입니다."),
     _NOT_FOUND_MEMBER(NOT_FOUND, "404", "해당하는 사용자를 찾지 못했습니다.");
+    // --------------------------------------- Team -----------------------------------
 
     private final HttpStatus status;
     private final String errorCode;
