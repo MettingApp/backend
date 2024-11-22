@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import server.meeting.domain.team.dto.TeamCreateRequestDto;
-import server.meeting.domain.team.dto.TeamCreateResponseDto;
-import server.meeting.domain.team.dto.TeamDetailResponse;
-import server.meeting.domain.team.dto.TeamListResponseDto;
+import server.meeting.domain.team.dto.*;
 import server.meeting.domain.team.service.TeamService;
 import server.meeting.global.api.Api;
 
@@ -38,8 +35,14 @@ public class TeamController {
         return Api.success(null);
     }
 
+    @PostMapping
+    public Api<TeamJoinResponseDto> joinTeam(@AuthenticationPrincipal String username,@Valid @RequestBody TeamJoinRequestDto requestBody){
+
+        return Api.success(teamService.joinTeam(username, requestBody));
+    }
+
     @GetMapping("/{id}")
-    Api<TeamDetailResponse> getTeam(@AuthenticationPrincipal String username, @PathVariable("id") Long teamId) {
+    Api<TeamJoinResponseDto> getTeam(@AuthenticationPrincipal String username, @PathVariable("id") Long teamId) {
         return Api.success(teamService.getTeam(username, teamId));
     }
 

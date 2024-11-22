@@ -1,23 +1,17 @@
 package server.meeting.domain.team.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.meeting.domain.member.model.Member;
 import server.meeting.domain.member.repository.MemberRepository;
-import server.meeting.domain.team.dto.TeamCreateRequestDto;
-import server.meeting.domain.team.dto.TeamCreateResponseDto;
-import server.meeting.domain.team.dto.TeamDetailResponse;
-import server.meeting.domain.team.dto.TeamListResponseDto;
+import server.meeting.domain.team.dto.*;
 import server.meeting.domain.team.model.Team;
 import server.meeting.domain.team.repository.TeamRepository;
-import server.meeting.global.error.ErrorType;
 import server.meeting.global.exception.ApiException;
 
-import java.util.IllformedLocaleException;
-
 import static server.meeting.global.error.ErrorType._NOT_FOUND_MEMBER;
+import static server.meeting.global.error.ErrorType._NOT_FOUND_TEAM;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +29,30 @@ public class TeamServiceImpl implements TeamService {
         Team team = Team.of(dto.getName(), dto.getTitle(), dto.getDescription(), member);
         teamRepository.save(team);
 
+
         return TeamCreateResponseDto.toDtoFrom(team);
     }
 
     @Override
-    public TeamDetailResponse getTeam(String username, Long teamId) {
+    public TeamJoinResponseDto joinTeam(String username, TeamJoinRequestDto dto) {
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
+
+        Team team = teamRepository.findTeamByInviteCode(dto.getInviteCode())
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_TEAM));
+
+        if(team.isSameInviteCodeWith(dto.getInviteCode())){
+            throw new ApiException(_NOT_FOUND_TEAM);
+        }
+        team.connectMember(member);
+
+        return TeamJoinResponseDto.builder()
+                .addedMemberId(member.getId())
+                .build();
+    }
+
+    @Override
+    public TeamJoinResponseDto getTeam(String username, Long teamId) {
         return null;
     }
 
