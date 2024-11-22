@@ -1,15 +1,20 @@
 package server.meeting.domain.team.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import server.meeting.domain.team.dto.TeamCreateRequestDto;
 import server.meeting.domain.team.dto.TeamCreateResponseDto;
 import server.meeting.domain.team.dto.TeamDetailResponse;
 import server.meeting.domain.team.dto.TeamListResponseDto;
 import server.meeting.domain.team.service.TeamService;
 import server.meeting.global.api.Api;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +23,19 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    Api<TeamCreateResponseDto> createTeam(@AuthenticationPrincipal String username,
-                                          @Valid @RequestBody TeamCreateRequestDto requestBody) {
-        return Api.success(teamService.createTeam(username, requestBody));
+    @ResponseStatus(HttpStatus.CREATED)
+    public Api<?> createTeam(@AuthenticationPrincipal String username,
+                             @Valid @RequestBody TeamCreateRequestDto requestBody,
+                             HttpServletResponse response) {
+
+        TeamCreateResponseDto responseBodyDto = teamService.createTeam(username, requestBody);
+        URI location = UriComponentsBuilder.fromPath("/api/v1/team/{id}")
+                .buildAndExpand(responseBodyDto.getTeamId())
+                .toUri();
+
+        response.setHeader("Location", location.toString());
+
+        return Api.success(null);
     }
 
     @GetMapping("/{id}")
