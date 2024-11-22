@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import server.meeting.domain.team.dto.*;
 import server.meeting.domain.team.service.TeamService;
+import server.meeting.global.CurrentMember;
 import server.meeting.global.api.Api;
 
 import java.net.URI;
@@ -21,10 +22,9 @@ public class TeamController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Api<?> createTeam(@AuthenticationPrincipal String username,
+    public Api<?> createTeam(@CurrentMember String username,
                              @Valid @RequestBody TeamCreateRequestDto requestBody,
                              HttpServletResponse response) {
-
         TeamCreateResponseDto responseBodyDto = teamService.createTeam(username, requestBody);
         URI location = UriComponentsBuilder.fromPath("/api/v1/team/{id}")
                 .buildAndExpand(responseBodyDto.getTeamId())
@@ -35,31 +35,31 @@ public class TeamController {
         return Api.success(null);
     }
 
-    @PostMapping
-    public Api<TeamJoinResponseDto> joinTeam(@AuthenticationPrincipal String username,@Valid @RequestBody TeamJoinRequestDto requestBody){
+    @PostMapping("/join")
+    public Api<TeamJoinResponseDto> joinTeam(@CurrentMember String username, @Valid @RequestBody TeamJoinRequestDto requestBody){
 
         return Api.success(teamService.joinTeam(username, requestBody));
     }
 
     @GetMapping("/{id}")
-    Api<TeamJoinResponseDto> getTeam(@AuthenticationPrincipal String username, @PathVariable("id") Long teamId) {
+    Api<TeamJoinResponseDto> getTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         return Api.success(teamService.getTeam(username, teamId));
     }
 
     @GetMapping
-    Api<TeamListResponseDto> getTeamList(@AuthenticationPrincipal String username,
+    Api<TeamListResponseDto> getTeamList(@CurrentMember String username,
                                          @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
         return Api.success(teamService.getTeamList(username, page));
     }
 
     @PatchMapping("{id}")
-    Api<?> modifyTeam(@AuthenticationPrincipal String username, @PathVariable("id") Long teamId) {
+    Api<?> modifyTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         teamService.modifyTeam(username, teamId);
         return Api.success(null);
     }
 
     @DeleteMapping("{id}")
-    Api<TeamCreateResponseDto> removeTeam(@AuthenticationPrincipal String username, @PathVariable("id") Long teamId) {
+    Api<TeamCreateResponseDto> removeTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         teamService.removeTeam(username, teamId);
         return Api.success(null);
     }

@@ -1,6 +1,7 @@
 package server.meeting.domain.team.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.meeting.domain.member.model.Member;
@@ -13,6 +14,7 @@ import server.meeting.global.exception.ApiException;
 import static server.meeting.global.error.ErrorType._NOT_FOUND_MEMBER;
 import static server.meeting.global.error.ErrorType._NOT_FOUND_TEAM;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

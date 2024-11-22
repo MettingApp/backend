@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,7 +37,7 @@ public class Member extends BaseEntity {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "team_id")
     private Team team;
 
     @OneToMany(mappedBy = "member")
@@ -54,7 +55,7 @@ public class Member extends BaseEntity {
         return new Member(role, username, password, nickname, name);
     }
 
-    public void linkTeam(Team team){
+    public void linkTeam(Team team) {
         this.team = team;
     }
 }

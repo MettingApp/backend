@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import server.meeting.domain.member.model.Member;
 import server.meeting.global.common.BaseEntity;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
     @Id
+    @Column(name = "team_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -60,7 +60,7 @@ public class Team extends BaseEntity {
     }
 
     public void connectMember(Member member) {
-        if(member.getTeam() != null){
+        if (member.getTeam() != null) {
             return;
         }
         members.add(member);
