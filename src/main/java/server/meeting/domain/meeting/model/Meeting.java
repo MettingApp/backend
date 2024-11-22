@@ -9,7 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import server.meeting.domain.member.model.Member;
-import server.meeting.domain.record.model.Record;
+import server.meeting.domain.record.model.Recorder;
+import server.meeting.domain.team.model.Team;
 import server.meeting.global.common.BaseEntity;
 
 import java.time.LocalDate;
@@ -34,7 +35,6 @@ public class Meeting extends BaseEntity {
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Size(min = 8, max = 12)
     @Column(name = "date_column", length = 10, nullable = false)
     private LocalDate date;
 
@@ -47,28 +47,54 @@ public class Meeting extends BaseEntity {
     @Column(length = 1000)
     private String extraContent;
 
-    @NotNull
+    //@NotNull
     @Size(max = 5000)
-    @Column(length = 5000, nullable = false)
+    @Column(length = 5000)
     private String summary;
 
-    @NotNull
+    //@NotNull
     @Size(max = 500)
     @Column(length = 500)
     private String recommendKeyword;
 
-    @NotNull
+    //@NotNull
     @OneToOne(mappedBy = "meeting")
     @JoinColumn(name = "record_id")
-    private Record record;
+    private Recorder recorder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @OneToMany(mappedBy = "meeting")
     private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
-    @Builder
-    public Meeting(String title, LocalDate date, String extraContent){
+    public Meeting(String title, LocalDate date, String extraContent, Recorder recorder, Team team) {
         this.title = title;
         this.date = date;
         this.extraContent = extraContent;
+        this.recorder = recorder;
+        this.team = team;
     }
+
+    @Builder
+    public static Meeting withFile(String title, LocalDate date, String extraContent, Recorder record, Team team) {
+        return new Meeting(title, date, extraContent, record, team);
+    }
+
+    @Builder
+    public static Meeting withoutFile(String title, LocalDate date, String extraContent, Team team) {
+        return Meeting.builder()
+                .title(title)
+                .date(date)
+                .extraContent(extraContent)
+                .team(team)
+                .build();
+    }
+
+    public Meeting getMembers(List<MeetingMembers> members){
+        this.meetingMembers = members;
+        return this;
+    }
+
 }

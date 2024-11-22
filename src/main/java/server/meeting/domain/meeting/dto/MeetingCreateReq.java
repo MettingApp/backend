@@ -1,15 +1,18 @@
 package server.meeting.domain.meeting.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @ToString
+@AllArgsConstructor
 public class MeetingCreateReq {
 
     private String date;
     private String extraContent;
     private String title;
     private String fileName;
+    private String teamId;
+    private List<String> members;
 }
