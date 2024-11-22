@@ -1,10 +1,7 @@
 package server.meeting.domain.meeting.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import server.meeting.domain.member.model.Member;
 
 import java.util.ArrayList;
@@ -26,4 +23,14 @@ public class MeetingMembers {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public MeetingMembers(Meeting meeting, Member member){
+        this.meeting = meeting;
+        this.member = member;
+    }
+
+    public MeetingMembers toEntity(Meeting meeting, Member member) {
+        return new MeetingMembers(meeting, member);
+    }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.domain.member.model.Member;
 import server.meeting.global.common.BaseEntity;
 
@@ -31,5 +32,8 @@ public class Team extends BaseEntity {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "id")
     private Member member;
+
+    @OneToMany(mappedBy = "team")
+    private List<Meeting> meetings= new ArrayList<>();
 
 }
