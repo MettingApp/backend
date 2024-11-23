@@ -1,5 +1,7 @@
 package server.meeting.domain.team.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import server.meeting.domain.team.dto.*;
 
 public interface TeamService {
@@ -7,9 +9,9 @@ public interface TeamService {
 
     TeamJoinResponseDto joinTeam(String username, TeamJoinRequestDto teamJoinRequestDto);
 
-    TeamJoinResponseDto getTeam(String username, Long teamId);
+    TeamDetailResponseDto getTeam(String username, Long teamId);
 
-    TeamListResponseDto getTeamList(String username, int page);
+    Page<TeamListResponseDto> getTeamList(String username, Pageable pageable);
 
     void modifyTeam(String username, Long teamId);
 

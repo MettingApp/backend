@@ -3,6 +3,9 @@ package server.meeting.domain.team.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +46,14 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public SuccessResponse<TeamJoinResponseDto> getTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
+    public SuccessResponse<TeamDetailResponseDto> getTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         return new SuccessResponse<>(teamService.getTeam(username, teamId));
     }
 
     @GetMapping
-    public SuccessResponse<TeamListResponseDto> getTeamList(@CurrentMember String username,
-                                         @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
-        return new SuccessResponse<>(teamService.getTeamList(username, page));
+    public SuccessResponse<Page<TeamListResponseDto>> getTeamList(@CurrentMember String username,
+                                                                 @PageableDefault(size = 5) Pageable pageable) {
+        return new SuccessResponse<>(teamService.getTeamList(username, pageable));
     }
 
     @PatchMapping("{id}")

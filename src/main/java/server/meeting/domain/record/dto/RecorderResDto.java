@@ -1,7 +1,9 @@
 package server.meeting.domain.record.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class RecorderResDto {
 

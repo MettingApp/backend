@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import server.meeting.domain.record.dto.RecorderResDto;
 
-import java.io.File;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -16,4 +15,11 @@ public class MeetingDetailResDto {
     private String extraContent;
     private String summary;
     private RecorderResDto recorder;
+
+    public void withNoRecord(String title, LocalDate date, String extraContent, String summary) {
+        this.title = title;
+        this.date = date;
+        this.extraContent = extraContent;
+        this.summary = summary;
+    }
 }
