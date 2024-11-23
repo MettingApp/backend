@@ -37,13 +37,12 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final RecorderRepository recorderRepository;
     private final MeetingMembersRepository meetingMembersRepository;
-    private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
 
     /* --------------------------------- create ---------------------------------- */
     @Transactional(readOnly = false, rollbackFor = ApiException.class)
-    public void createMeeting (MeetingCreateReq req, MultipartFile file) {
+    public void createMeeting (MeetingCreateReq req, MultipartFile file, String username) {
         String d = req.getDate();
         LocalDate convertDate = convertDate(d);
 
@@ -52,18 +51,18 @@ public class MeetingService {
         Recorder record = new Recorder(req.getFileName(), recordUrl);
         recorderRepository.save(record);
 
-        Team team = findIfExists(req.getTeamId());
+        Team team = findIfExists(username);
         Meeting meeting = Meeting.withFile(req.getTitle(), convertDate, req.getExtraContent(), record, team);
         addMembersToMeeting(req.getMembers(), meeting);
         meetingRepository.save(meeting);
     }
 
     @Transactional(readOnly = false, rollbackFor = ApiException.class)
-    public void creatingMeetingWithOutFile (MeetingCreateReq req) {
+    public void creatingMeetingWithOutFile (MeetingCreateReq req, String username) {
         String d = req.getDate();
         LocalDate convertDate = convertDate(d);
 
-        Team team = findIfExists(req.getTeamId());
+        Team team = findIfExists(username);
         Meeting meeting = Meeting.withoutFile(req.getTitle(), convertDate, req.getExtraContent(), team);
         addMembersToMeeting(req.getMembers(), meeting);
         meetingRepository.save(meeting);
@@ -86,15 +85,9 @@ public class MeetingService {
         }
     }
 
-    private Team findIfExists(String teamId) {
-        return teamRepository.findById(Long.valueOf(teamId))
-                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_TEAM));
-    }
-
     /* --------------------------------- Read ---------------------------------- */
-    public List<MeetingResDto> getMeetings(Long teamId){
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_TEAM));
+    public List<MeetingResDto> getMeetings(String username){
+        Team team = findIfExists(username);
 
         List<Meeting> meetings = meetingRepository.selectMeetingList();
         return meetings.stream()
@@ -102,9 +95,8 @@ public class MeetingService {
                 .toList();
     }
 
-    public MeetingDetailResDto getMeetingDetail(Long teamId, Long meetingId) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_TEAM));
+    public MeetingDetailResDto getMeetingDetail(String username, Long meetingId) {
+        Team team = findIfExists(username);
 
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEETING));
@@ -120,11 +112,19 @@ public class MeetingService {
 
     /* --------------------------------- Update ---------------------------------- */
 
-//    public void updateMeeting(Long teamId, Long meetingId){
-//
-//    }
+    public void updateMeeting(String username, Long meetingId){
+
+    }
 
     /* --------------------------------- Delete ---------------------------------- */
 
 
+    private Team findIfExists(String username) {
+        Member member = memberRepository.findMemberByUsernameWithTeam(username)
+                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEMBER));
+
+        if(member.getTeam() ==null)
+            throw new ApiException(ErrorType._NOT_FOUND_TEAM);
+        return member.getTeam();
+    }
 }

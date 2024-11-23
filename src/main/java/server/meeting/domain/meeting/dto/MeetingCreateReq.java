@@ -13,7 +13,6 @@ public class MeetingCreateReq {
     private String extraContent;
     private String title;
     private String fileName;
-    private String teamId;
     private String category;
     private List<String> members;
 }

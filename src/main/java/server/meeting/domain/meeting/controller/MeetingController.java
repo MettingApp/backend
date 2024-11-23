@@ -27,7 +27,7 @@ public class MeetingController {
                                                          @RequestPart MultipartFile file,
                                                          @CurrentMember String username) {
 
-        meetingService.createMeeting(req, file);
+        meetingService.createMeeting(req, file, username);
         return SuccessResponse.ok("meeting created");
     }
 
@@ -35,25 +35,29 @@ public class MeetingController {
     public SuccessResponse<String> createMeetingWithOutFile(@RequestPart @Valid MeetingCreateReq req,
                                                             @CurrentMember String username) {
 
-        meetingService.creatingMeetingWithOutFile(req);
+        meetingService.creatingMeetingWithOutFile(req, username);
         return SuccessResponse.ok("meeting created");
     }
 
     @GetMapping
-    public SuccessResponse<List<MeetingResDto>> getMeetings(@RequestParam String teamId,
-                                                            @CurrentMember String username) {
+    public SuccessResponse<List<MeetingResDto>> getMeetings(@CurrentMember String username) {
 
-        List<MeetingResDto> meetings = meetingService.getMeetings(Long.valueOf(teamId));
+        List<MeetingResDto> meetings = meetingService.getMeetings(username);
 
         return new SuccessResponse<>(meetings);
     }
 
     @GetMapping("/detail")
-    public SuccessResponse<MeetingDetailResDto> getMeetingDetail(@RequestParam String teamId,
-                                                                 @RequestParam String meetingId,
+    public SuccessResponse<MeetingDetailResDto> getMeetingDetail(@RequestParam String meetingId,
                                                                  @CurrentMember String username) {
-        MeetingDetailResDto meeting = meetingService.getMeetingDetail(Long.valueOf(teamId), Long.valueOf(meetingId));
+        MeetingDetailResDto meeting = meetingService.getMeetingDetail(username, Long.valueOf(meetingId));
 
         return new SuccessResponse<>(meeting);
     }
+
+//    @PatchMapping
+//    public SuccessResponse<String> updateMeeting(@RequestParam String meetingId,
+//                                                         @RequestBody MeetingEditReq dto) {
+//
+//    }
 }
