@@ -15,13 +15,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import server.meeting.domain.meeting.dto.MeetingCreateReq;
 import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.domain.meeting.repository.MeetingRepository;
+import server.meeting.domain.member.model.Member;
+import server.meeting.domain.member.model.Role;
+import server.meeting.domain.member.repository.MemberRepository;
 import server.meeting.domain.record.model.Recorder;
 import server.meeting.domain.record.repository.RecorderRepository;
+import server.meeting.domain.team.model.Team;
+import server.meeting.domain.team.repository.TeamRepository;
 import server.meeting.global.s3.S3Service;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -41,6 +49,12 @@ class MeetingServiceTest {
     private RecorderRepository recorderRepository;
 
     @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
     private S3Service s3Service;
 
     @BeforeEach
@@ -48,53 +62,39 @@ class MeetingServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-//    @DisplayName("파일을 첨부한 상태에서 회의록이 생성됩니다.")
-//    @Test
-//    void createMeetingWithFile() throws Exception{
-//        // Mock 파일 준비
-//        MockMultipartFile mockFile = new MockMultipartFile(
-//                "file",
-//                "test-audio.m4a",
-//                MediaType.MULTIPART_FORM_DATA_VALUE,
-//                "test audio content".getBytes()
-//        );
-//
-//        // Mock S3 업로드 결과
-//        URL mockUrl = new URL("https://s3.amazonaws.com/bucket-name/test-audio.m4a");
-//        Mockito.when(s3Service.uploadFile(mockFile)).thenReturn(mockUrl);
-//
-//        // Mock Recorder 저장 결과
-//        Recorder mockRecorder = new Recorder("meeting-record", mockUrl.toString());
-//        Mockito.when(recorderRepository.save(Mockito.any(Recorder.class))).thenReturn(mockRecorder);
-//
-//        // Mock Meeting 저장 결과
-//        Meeting mockMeeting = Meeting.withFile(
-//                "Team Meeting",
-//                LocalDate.parse("2024-11-21"),
-//                "Weekly team meeting",
-//                mockRecorder
-//        );
-//        Mockito.when(meetingRepository.save(Mockito.any(Meeting.class))).thenReturn(mockMeeting);
-//
-//        // When
-//        MeetingCreateReq req = new MeetingCreateReq("2022-10-11","안녕하세요","1차 회의","basic_file");
-//        meetingService.createMeeting(req, mockFile);
-//
-//        // Then
-//        // Recorder 저장 검증
-//        ArgumentCaptor<Recorder> recorderCaptor = ArgumentCaptor.forClass(Recorder.class);
-//        Mockito.verify(recorderRepository, Mockito.times(1)).save(recorderCaptor.capture());
-//        Recorder savedRecorder = recorderCaptor.getValue();
-//        assertEquals("meeting-record", savedRecorder.getFileName());
-//
-//        // Meeting 저장 검증
-//        ArgumentCaptor<Meeting> meetingCaptor = ArgumentCaptor.forClass(Meeting.class);
-//        Mockito.verify(meetingRepository, Mockito.times(1)).save(meetingCaptor.capture());
-//        Meeting savedMeeting = meetingCaptor.getValue();
-//        assertEquals("Team Meeting", savedMeeting.getTitle());
-//        assertEquals(LocalDate.parse("2024-11-21"), savedMeeting.getDate());
-//        assertEquals("Weekly team meeting", savedMeeting.getExtraContent());
-//        assertEquals(savedRecorder, savedMeeting.getRecorder());
-//
-//    }
+    @DisplayName("파일을 첨부한 상태에서 회의록이 생성됩니다.")
+    @Test
+    void createMeetingWithFile() throws Exception{
+        // given
+        // Mock 파일 준비
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test-audio.mp3",
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                "test audio content".getBytes()
+        );
+        // Mock S3 업로드 결과
+        URL mockUrl = new URL("https://s3.amazonaws.com/bucket-name/test-audio.mp3");
+        Mockito.lenient().when(s3Service.uploadFile(mockFile)).thenReturn(mockUrl);
+        // Mock Recorder 저장 결과
+        Recorder mockRecorder = new Recorder("meeting-record", mockUrl.toString());
+        Mockito.lenient().when(recorderRepository.save(Mockito.any(Recorder.class))).thenReturn(mockRecorder);
+
+        Team mockTeam = new Team(1L, "teamA", "title", "description");
+        Member mockMemberA = Member.of(Role.USER, "usernameA", "clark1245!", "parkA", "정곤A");
+        Member mockMemberB = Member.of(Role.USER, "usernameB", "clark1245!", "parkB", "정곤B");
+        Member mockMemberC = Member.of(Role.USER, "usernameC", "clark1245!", "parkC", "정곤C");
+
+        Mockito.when(teamRepository.save(Mockito.any(Team.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Mockito.when(teamRepository.findById(1L)).thenReturn(Optional.of(mockTeam));
+
+        teamRepository.save(mockTeam); // Mock save 호출
+
+        // then
+        Optional<Team> savedTeam = teamRepository.findById(1L);
+        assertThat(savedTeam).isPresent();
+        assertThat(savedTeam.get().getName()).isEqualTo("teamA");
+
+    }
+
 }

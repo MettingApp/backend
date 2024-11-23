@@ -17,6 +17,7 @@ import server.meeting.domain.meeting.repository.MeetingMembersRepository;
 import server.meeting.domain.meeting.repository.MeetingRepository;
 import server.meeting.domain.member.model.Member;
 import server.meeting.domain.member.repository.MemberRepository;
+import server.meeting.domain.record.dto.RecorderResDto;
 import server.meeting.domain.record.model.Recorder;
 import server.meeting.domain.record.repository.RecorderRepository;
 import server.meeting.domain.team.model.Team;
@@ -104,6 +105,30 @@ public class MeetingService {
                 .map(MeetingResDto::new)
                 .toList();
     }
+
+    public MeetingDetailResDto getMeetingDetail(Long teamId, Long meetingId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_TEAM));
+
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEETING));
+
+        Recorder recorder = meeting.getRecorder();
+        RecorderResDto recorderDto = new RecorderResDto(recorder.getFileName(), recorder.getRecordFile());
+
+        MeetingDetailResDto resDto = new MeetingDetailResDto(meeting.getTitle(), meeting.getDate(),
+                meeting.getExtraContent(), meeting.getSummary(), recorderDto);
+
+        return resDto;
+    }
+
+    /* --------------------------------- Update ---------------------------------- */
+
+//    public void updateMeeting(Long teamId, Long meetingId){
+//
+//    }
+
+    /* --------------------------------- Delete ---------------------------------- */
 
 
 }

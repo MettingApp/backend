@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import server.meeting.domain.meeting.dto.MeetingCreateReq;
+import server.meeting.domain.meeting.dto.MeetingDetailResDto;
 import server.meeting.domain.meeting.dto.MeetingResDto;
 import server.meeting.domain.meeting.service.MeetingService;
 import server.meeting.global.api.Api;
@@ -38,8 +39,19 @@ public class MeetingController {
         return Api.success("meeting created");
     }
 
-//    @GetMapping
-//    public Api<List<MeetingResDto>> getMeetings() {
-//
-//    }
+    @GetMapping
+    public Api<List<MeetingResDto>> getMeetings(@RequestParam String teamId) {
+
+        List<MeetingResDto> meetings = meetingService.getMeetings(Long.valueOf(teamId));
+
+        return Api.success(meetings);
+    }
+
+    @GetMapping("/detail")
+    public Api<MeetingDetailResDto> getMeetingDetail(@RequestParam String teamId,
+                                                @RequestParam String meetingId) {
+        MeetingDetailResDto meeting = meetingService.getMeetingDetail(Long.valueOf(teamId), Long.valueOf(meetingId));
+
+        return Api.success(meeting);
+    }
 }

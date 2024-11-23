@@ -21,7 +21,7 @@ public enum ErrorType implements ErrorCodeInterface {
     _CONFLICT_NAME(CONFLICT, "409", "이미 존재하는 닉네임 입니다."),
     _NOT_FOUND_MEMBER(NOT_FOUND, "404", "해당하는 사용자를 찾지 못했습니다."),
     // --------------------------------------- Meeting -----------------------------------
-
+    _NOT_FOUND_MEETING(NOT_FOUND, "M4001", "해당되는 회의를 찾지 못했습니다."),
     // --------------------------------------- Team -----------------------------------
     _NOT_FOUND_TEAM(NOT_FOUND, "T4001", "해당되는 조직을 찾지 못했습니다.");
 

@@ -2,6 +2,7 @@ package server.meeting.domain.meeting.dto;
 
 import lombok.Getter;
 import server.meeting.domain.meeting.model.Meeting;
+import server.meeting.domain.record.dto.RecorderResDto;
 
 import java.time.LocalDate;
 
@@ -12,7 +13,7 @@ public class MeetingResDto {
     private Long meetingId;
 
     public MeetingResDto(Meeting meeting) {
-        this.localDate = localDate;
-        this.meetingId = meetingId;
+        this.localDate = meeting.getDate();
+        this.meetingId = meeting.getId();
     }
 }
