@@ -15,10 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import server.meeting.global.api.Api;
-import server.meeting.global.api.Result;
 import server.meeting.global.config.SecurityConfig;
-import server.meeting.global.error.ErrorType;
+import server.meeting.global.exception.ErrorType;
 import server.meeting.global.util.JwtProvider;
 
 import java.io.IOException;
@@ -72,12 +70,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         response.setStatus(UNAUTHORIZED.value());
         response.setContentType(APPLICATION_JSON_UTF8_VALUE);
-        Api<Object> result = Api.ERROR(Result.ERROR(ErrorType._UNAUTHORIZED), ErrorType._UNAUTHORIZED, message);
-        try {
-            response.getWriter().write(objectMapper.writeValueAsString(result));
-        } catch (IOException e) {
-            log.error("JWT filter IO ERROR = {}", e.getMessage());
-        }
     }
 
     private String resolveToken(HttpServletRequest request) {

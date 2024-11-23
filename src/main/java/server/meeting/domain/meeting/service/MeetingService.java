@@ -1,7 +1,5 @@
 package server.meeting.domain.meeting.service;
 
-import com.querydsl.core.QueryFactory;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,6 @@ import server.meeting.domain.meeting.dto.MeetingDetailResDto;
 import server.meeting.domain.meeting.dto.MeetingResDto;
 import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.domain.meeting.model.MeetingMembers;
-import server.meeting.domain.meeting.model.QMeeting;
 import server.meeting.domain.meeting.repository.MeetingMembersRepository;
 import server.meeting.domain.meeting.repository.MeetingRepository;
 import server.meeting.domain.member.model.Member;
@@ -22,8 +19,7 @@ import server.meeting.domain.record.model.Recorder;
 import server.meeting.domain.record.repository.RecorderRepository;
 import server.meeting.domain.team.model.Team;
 import server.meeting.domain.team.repository.TeamRepository;
-import server.meeting.global.api.Api;
-import server.meeting.global.error.ErrorType;
+import server.meeting.global.exception.ErrorType;
 import server.meeting.global.exception.ApiException;
 import server.meeting.global.s3.S3Service;
 
@@ -81,7 +77,7 @@ public class MeetingService {
     private void addMembersToMeeting (List<String> nickNames, Meeting meeting) {
         List<Member> members = nickNames.stream().map(nickName ->{
             return memberRepository.findMemberByUsername(nickName)
-                    .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEMBER, nickName));
+                    .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEMBER));
         }).toList();
 
         for(Member member : members){

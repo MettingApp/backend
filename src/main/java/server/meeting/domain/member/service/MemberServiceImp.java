@@ -18,7 +18,7 @@ import server.meeting.global.common.TokenDto;
 import server.meeting.global.exception.ApiException;
 import server.meeting.global.util.JwtProvider;
 
-import static server.meeting.global.error.ErrorType.*;
+import static server.meeting.global.exception.ErrorType.*;
 
 @Service
 @RequiredArgsConstructor

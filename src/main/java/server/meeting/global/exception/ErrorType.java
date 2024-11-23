@@ -1,4 +1,4 @@
-package server.meeting.global.error;
+package server.meeting.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,9 +8,10 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorType implements ErrorCodeInterface {
+public enum ErrorType {
 
     _OK(OK, "200", "성공"),
+    _SERVER_ERROR(INTERNAL_SERVER_ERROR, "500", "internal server error"),
     // --------------------------------------- S3 -----------------------------------
     _S3_UPLOAD_FAIL(BAD_REQUEST, "S4001", "업로드에 실패하였습니다."),
     _S3_NOT_EXISTS_KEY(BAD_REQUEST, "S4002", "존재하지 않는 파일 명입니다."),
@@ -23,7 +24,9 @@ public enum ErrorType implements ErrorCodeInterface {
     // --------------------------------------- Team -----------------------------------
     _NOT_FOUND_TEAM(NOT_FOUND, "404", "해당하는 팀을 찾지 못했습니다."),
     _BAD_REQUEST_INVITE_CODE(BAD_REQUEST, "400", "인가코드가 일치하지 않습니다."),
-    _CONFLICT_ALREADY_TEAM(CONFLICT, "409", "이미 ");
+    _CONFLICT_ALREADY_TEAM(CONFLICT, "409", "이미 "),
+    // -------------------------------------- Meeting ------------------------------------
+    _NOT_FOUND_MEETING(BAD_REQUEST, "M4001", "해당되는 회의를 찾지 못했습니다.");
 
     private final HttpStatus status;
     private final String errorCode;
