@@ -11,6 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 public enum ErrorType {
 
     _OK(OK, "200", "성공"),
+    _BAD_REQUEST(BAD_REQUEST, "400", "잘못된 입력값 형식 입니다."),
     _SERVER_ERROR(INTERNAL_SERVER_ERROR, "500", "internal server error"),
     // --------------------------------------- S3 -----------------------------------
     _S3_UPLOAD_FAIL(BAD_REQUEST, "S4001", "업로드에 실패하였습니다."),
