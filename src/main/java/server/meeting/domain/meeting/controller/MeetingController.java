@@ -33,8 +33,8 @@ public class MeetingController {
     }
 
     @PostMapping("/no-record/{id}")
-    public SuccessResponse<String> createMeetingWithOutFile(@RequestPart @Valid MeetingCreateReq req,
-                                                            @CurrentMember String username,
+    public SuccessResponse<String> createMeetingWithOutFile(@CurrentMember String username,
+                                                            @RequestPart @Valid MeetingCreateReq req,
                                                             @PathVariable(name = "id") String teamId) {
 
         meetingService.creatingMeetingWithOutFile(req, username, teamId);

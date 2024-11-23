@@ -63,7 +63,7 @@ public class MeetingService {
         String d = req.getDate();
         LocalDate convertDate = convertDate(d);
 
-        Team team = findIfExists(username);
+        Team team = findIfExists(teamId);
         Meeting meeting = Meeting.withoutFile(req.getTitle(), convertDate, req.getExtraContent(), team);
         addMembersToMeeting(req.getMembers(), meeting);
         meetingRepository.save(meeting);
@@ -88,7 +88,7 @@ public class MeetingService {
 
     /* --------------------------------- Read ---------------------------------- */
     public List<MeetingResDto> getMeetings(String username, String teamId){
-        Team team = findIfExists(username);
+        Team team = findIfExists(teamId);
 
         List<Meeting> meetings = meetingRepository.selectMeetingList();
         return meetings.stream()
@@ -97,18 +97,23 @@ public class MeetingService {
     }
 
     public MeetingDetailResDto getMeetingDetail(String username, Long meetingId, String teamId) {
-        Team team = findIfExists(username);
+        Team team = findIfExists(teamId);
 
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_MEETING));
 
         Recorder recorder = meeting.getRecorder();
-        RecorderResDto recorderDto = new RecorderResDto(recorder.getFileName(), recorder.getRecordFile());
+        if(recorder != null){
+            RecorderResDto recorderDto = new RecorderResDto(recorder.getFileName(), recorder.getRecordFile());
 
-        MeetingDetailResDto resDto = new MeetingDetailResDto(meeting.getTitle(), meeting.getDate(),
-                meeting.getExtraContent(), meeting.getSummary(), recorderDto);
+            MeetingDetailResDto resDto = new MeetingDetailResDto(meeting.getTitle(), meeting.getDate(),
+                    meeting.getExtraContent(), meeting.getSummary(), recorderDto);
 
-        return resDto;
+            return resDto;
+        }
+
+        return new MeetingDetailResDto(meeting.getTitle(), meeting.getDate(),
+                meeting.getExtraContent(), meeting.getSummary(), new RecorderResDto("null", "null"));
     }
 
     /* --------------------------------- Update ---------------------------------- */
@@ -121,7 +126,8 @@ public class MeetingService {
 
 
     private Team findIfExists(String teamId) {
-        Team team = teamRepository.findById(Long.valueOf(teamId))
+        Long id = Long.valueOf(teamId);
+        Team team = teamRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorType._NOT_FOUND_TEAM));
 
         return team;
