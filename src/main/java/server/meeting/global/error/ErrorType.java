@@ -18,12 +18,12 @@ public enum ErrorType implements ErrorCodeInterface {
     _UNAUTHORIZED(UNAUTHORIZED, "401", "사용자 인증에 실패했습니다."),
     _BAD_REQUEST_PASSWORD(BAD_REQUEST, "400", "비밀번호와 재확인 비밀번호가 일치하지 않습니다."),
     _CONFLICT_USERNAME(CONFLICT, "409", "이미 존재하는 아이디 입니다."),
-    _CONFLICT_NAME(CONFLICT, "409", "이미 존재하는 닉네임 입니다."),
+    _CONFLICT_NICKNAME(CONFLICT, "409", "이미 존재하는 닉네임 입니다."),
     _NOT_FOUND_MEMBER(NOT_FOUND, "404", "해당하는 사용자를 찾지 못했습니다."),
-    // --------------------------------------- Meeting -----------------------------------
-    _NOT_FOUND_MEETING(NOT_FOUND, "M4001", "해당되는 회의를 찾지 못했습니다."),
     // --------------------------------------- Team -----------------------------------
-    _NOT_FOUND_TEAM(NOT_FOUND, "T4001", "해당되는 조직을 찾지 못했습니다.");
+    _NOT_FOUND_TEAM(NOT_FOUND, "404", "해당하는 팀을 찾지 못했습니다."),
+    _BAD_REQUEST_INVITE_CODE(BAD_REQUEST, "400", "인가코드가 일치하지 않습니다."),
+    _CONFLICT_ALREADY_TEAM(CONFLICT, "409", "이미 ");
 
     private final HttpStatus status;
     private final String errorCode;
