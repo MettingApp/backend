@@ -25,7 +25,7 @@ public enum ErrorType {
     // --------------------------------------- Team -----------------------------------
     _NOT_FOUND_TEAM(NOT_FOUND, "404", "해당하는 팀을 찾지 못했습니다."),
     _BAD_REQUEST_INVITE_CODE(BAD_REQUEST, "400", "인가코드가 일치하지 않습니다."),
-    _CONFLICT_ALREADY_TEAM(CONFLICT, "409", "이미 "),
+    _ALREADY_JOINED_TEAM(CONFLICT, "409", "이미 팀에 가입했습니다."),
     // -------------------------------------- Meeting ------------------------------------
     _NOT_FOUND_MEETING(BAD_REQUEST, "M4001", "해당되는 회의를 찾지 못했습니다.");
 

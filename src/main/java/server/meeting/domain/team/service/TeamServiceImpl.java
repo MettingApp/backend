@@ -8,9 +8,13 @@ import server.meeting.domain.member.model.Member;
 import server.meeting.domain.member.repository.MemberRepository;
 import server.meeting.domain.team.dto.*;
 import server.meeting.domain.team.model.Team;
+import server.meeting.domain.team.model.TeamMember;
+import server.meeting.domain.team.repository.TeamMemberRepository;
 import server.meeting.domain.team.repository.TeamRepository;
 import server.meeting.global.exception.ApiException;
+import server.meeting.global.exception.ErrorType;
 
+import static server.meeting.global.exception.ErrorType.*;
 import static server.meeting.global.exception.ErrorType._NOT_FOUND_MEMBER;
 import static server.meeting.global.exception.ErrorType._NOT_FOUND_TEAM;
 
@@ -21,9 +25,10 @@ import static server.meeting.global.exception.ErrorType._NOT_FOUND_TEAM;
 public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
 
-    @Override
+    /*@Override
     public TeamCreateResponseDto createTeam(String username, TeamCreateRequestDto dto) {
         Member member = memberRepository.findMemberByUsername(username)
                 .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
@@ -52,6 +57,50 @@ public class TeamServiceImpl implements TeamService {
             throw new ApiException(_NOT_FOUND_TEAM);
         }
         team.connectMember(member);
+
+        return TeamJoinResponseDto.builder()
+                .addedMemberId(member.getId())
+                .build();
+    }*/
+
+    @Transactional
+    @Override
+    public TeamCreateResponseDto createTeam(String username, TeamCreateRequestDto dto) {
+        // 팀 생성자(Member) 조회
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
+
+        // 팀 생성
+        Team team = Team.of(dto.getName(), dto.getTitle(), dto.getDescription(), member);
+        teamRepository.save(team);
+
+        //팀 생성자(팀장)를 TeamMember로 등록
+        TeamMember teamMember = TeamMember.of(team, member);
+        teamMemberRepository.save(teamMember);
+
+        return TeamCreateResponseDto.toDtoFrom(team);
+    }
+
+    @Transactional
+    @Override
+    public TeamJoinResponseDto joinTeam(String username, TeamJoinRequestDto dto) {
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
+
+        Team team = teamRepository.findTeamByInviteCode(dto.getInviteCode())
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_TEAM));
+
+        if (teamMemberRepository.existsTeamMemberByMemberAndTeam(member, team)) {
+            throw new ApiException(_ALREADY_JOINED_TEAM);
+        }
+
+        if (!team.isSameInviteCodeWith(dto.getInviteCode())) {
+            throw new ApiException(ErrorType._BAD_REQUEST_INVITE_CODE);
+        }
+
+        // TeamMember 생성 및 저장
+        TeamMember teamMember = TeamMember.of(team, member);
+        teamMemberRepository.save(teamMember);
 
         return TeamJoinResponseDto.builder()
                 .addedMemberId(member.getId())
