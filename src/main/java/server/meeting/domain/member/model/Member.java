@@ -58,4 +58,5 @@ public class Member extends BaseEntity {
     public void linkTeam(Team team) {
         this.team = team;
     }
+
 }

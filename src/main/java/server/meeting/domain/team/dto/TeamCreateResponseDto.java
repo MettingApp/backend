@@ -10,16 +10,19 @@ import server.meeting.domain.team.model.Team;
 @NoArgsConstructor
 public class TeamCreateResponseDto {
     private Long teamId;
+    private String inviteCode;
 
     @Builder
-    private TeamCreateResponseDto(Long teamId) {
+    private TeamCreateResponseDto(Long teamId, String inviteCode) {
         this.teamId = teamId;
+        this.inviteCode = inviteCode;
     }
 
     public static TeamCreateResponseDto toDtoFrom(Team team) {
 
         return TeamCreateResponseDto.builder()
                 .teamId(team.getId())
+                .inviteCode(team.getInviteCode())
                 .build();
     }
 }

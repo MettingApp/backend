@@ -37,11 +37,16 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public TeamJoinResponseDto joinTeam(String username, TeamJoinRequestDto dto) {
-        Member member = memberRepository.findMemberByUsername(username)
+        Member member = memberRepository.findMemberByUsernameWithTeam(username)
                 .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
 
         Team team = teamRepository.findTeamByInviteCode(dto.getInviteCode())
                 .orElseThrow(() -> new ApiException(_NOT_FOUND_TEAM));
+
+        // 멤버가 속한
+        if(member.getTeam() != null && member.getTeam() == team){
+            throw new ApiException(_NOT_FOUND_TEAM);
+        }
 
         if(team.isSameInviteCodeWith(dto.getInviteCode())){
             throw new ApiException(_NOT_FOUND_TEAM);

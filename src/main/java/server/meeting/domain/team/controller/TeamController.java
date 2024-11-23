@@ -22,9 +22,10 @@ public class TeamController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Api<?> createTeam(@CurrentMember String username,
+    public Api<TeamCreateResponseDto> createTeam(@CurrentMember String username,
                              @Valid @RequestBody TeamCreateRequestDto requestBody,
                              HttpServletResponse response) {
+
         TeamCreateResponseDto responseBodyDto = teamService.createTeam(username, requestBody);
         URI location = UriComponentsBuilder.fromPath("/api/v1/team/{id}")
                 .buildAndExpand(responseBodyDto.getTeamId())
@@ -32,7 +33,7 @@ public class TeamController {
 
         response.setHeader("Location", location.toString());
 
-        return Api.success(null);
+        return Api.success(responseBodyDto);
     }
 
     @PostMapping("/join")
