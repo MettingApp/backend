@@ -5,6 +5,9 @@ import server.meeting.domain.member.model.Member;
 import server.meeting.domain.team.model.Team;
 import server.meeting.domain.team.model.TeamMember;
 
-public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
+import java.util.List;
+
+public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, CustomTeamMemberRepository {
     boolean existsTeamMemberByMemberAndTeam(Member member, Team team);
+
 }

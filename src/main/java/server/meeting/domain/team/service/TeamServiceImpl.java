@@ -2,6 +2,8 @@ package server.meeting.domain.team.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.meeting.domain.member.model.Member;
@@ -13,6 +15,8 @@ import server.meeting.domain.team.repository.TeamMemberRepository;
 import server.meeting.domain.team.repository.TeamRepository;
 import server.meeting.global.exception.ApiException;
 import server.meeting.global.exception.ErrorType;
+
+import java.util.List;
 
 import static server.meeting.global.exception.ErrorType.*;
 import static server.meeting.global.exception.ErrorType._NOT_FOUND_MEMBER;
@@ -108,13 +112,25 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public TeamJoinResponseDto getTeam(String username, Long teamId) {
-        return null;
+    public TeamDetailResponseDto getTeam(String username, Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_TEAM));
+
+        List<String> nicknames = teamMemberRepository.findMemberNicknameByMemberId(teamId);
+
+        return new TeamDetailResponseDto(team.getName(), team.getTitle(), team.getDescription(), nicknames);
     }
 
     @Override
-    public TeamListResponseDto getTeamList(String username, int page) {
-        return null;
+    public Page<TeamListResponseDto> getTeamList(String username, Pageable pageable) {
+        Member member = memberRepository.findMemberByUsername(username)
+                .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
+
+        List<String> nicknames = teamMemberRepository.findMemberNicknameByMemberId(member.getId());
+        Page<Team> teamList = teamMemberRepository.findTeamsByMemberId(member.getId(), pageable);
+        Page<TeamListResponseDto> result = teamList.map(team -> new TeamListResponseDto(team.getId(), team.getName(),
+                team.getTitle(), nicknames));
+        return result;
     }
 
     @Override

@@ -22,42 +22,40 @@ public class MeetingController {
 
     private final MeetingService meetingService;
 
-    @PostMapping
+    @PostMapping("/{id}")
     public SuccessResponse<String> createMeetingWithFile(@RequestPart @Valid MeetingCreateReq req,
                                                          @RequestPart MultipartFile file,
-                                                         @CurrentMember String username) {
+                                                         @CurrentMember String username,
+                                                         @PathVariable(name = "id") String teamId) {
 
-        meetingService.createMeeting(req, file, username);
+        meetingService.createMeeting(req, file, username, teamId);
         return SuccessResponse.ok("meeting created");
     }
 
-    @PostMapping("/no-record")
+    @PostMapping("/no-record/{id}")
     public SuccessResponse<String> createMeetingWithOutFile(@RequestPart @Valid MeetingCreateReq req,
-                                                            @CurrentMember String username) {
+                                                            @CurrentMember String username,
+                                                            @PathVariable(name = "id") String teamId) {
 
-        meetingService.creatingMeetingWithOutFile(req, username);
+        meetingService.creatingMeetingWithOutFile(req, username, teamId);
         return SuccessResponse.ok("meeting created");
     }
 
-    @GetMapping
-    public SuccessResponse<List<MeetingResDto>> getMeetings(@CurrentMember String username) {
+    @GetMapping("/{id}")
+    public SuccessResponse<List<MeetingResDto>> getMeetings(@CurrentMember String username,
+                                                            @PathVariable(name = "id") String teamId) {
 
-        List<MeetingResDto> meetings = meetingService.getMeetings(username);
+        List<MeetingResDto> meetings = meetingService.getMeetings(username, teamId);
 
         return new SuccessResponse<>(meetings);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/detail/{id}")
     public SuccessResponse<MeetingDetailResDto> getMeetingDetail(@RequestParam String meetingId,
-                                                                 @CurrentMember String username) {
-        MeetingDetailResDto meeting = meetingService.getMeetingDetail(username, Long.valueOf(meetingId));
+                                                                 @CurrentMember String username,
+                                                                 @PathVariable(name = "id") String teamId) {
+        MeetingDetailResDto meeting = meetingService.getMeetingDetail(username, Long.valueOf(meetingId), teamId);
 
         return new SuccessResponse<>(meeting);
     }
-
-//    @PatchMapping
-//    public SuccessResponse<String> updateMeeting(@RequestParam String meetingId,
-//                                                         @RequestBody MeetingEditReq dto) {
-//
-//    }
 }
