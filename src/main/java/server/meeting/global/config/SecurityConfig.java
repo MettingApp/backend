@@ -20,7 +20,12 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
 
-    public static final String[] ALLOWED_URL = {"/api/v1/member/sign-up", "/api/v1/member/sign-in"};
+    public static final String[] ALLOWED_URL = {"/api/v1/member/sign-up", "/api/v1/member/sign-in",
+            "/favicon.ico",
+            "/error",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v3/api-docs/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
