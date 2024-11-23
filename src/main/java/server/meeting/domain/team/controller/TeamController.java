@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import server.meeting.domain.team.dto.*;
 import server.meeting.domain.team.service.TeamService;
 import server.meeting.global.CurrentMember;
-import server.meeting.global.api.Api;
+import server.meeting.global.success.SuccessResponse;
 
 import java.net.URI;
 
@@ -22,9 +22,9 @@ public class TeamController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Api<TeamCreateResponseDto> createTeam(@CurrentMember String username,
-                             @Valid @RequestBody TeamCreateRequestDto requestBody,
-                             HttpServletResponse response) {
+    public SuccessResponse<TeamCreateResponseDto> createTeam(@CurrentMember String username,
+                                                             @Valid @RequestBody TeamCreateRequestDto requestBody,
+                                                             HttpServletResponse response) {
 
         TeamCreateResponseDto responseBodyDto = teamService.createTeam(username, requestBody);
         URI location = UriComponentsBuilder.fromPath("/api/v1/team/{id}")
@@ -33,35 +33,35 @@ public class TeamController {
 
         response.setHeader("Location", location.toString());
 
-        return Api.success(responseBodyDto);
+        return new SuccessResponse<>(responseBodyDto);
     }
 
     @PostMapping("/join")
-    public Api<TeamJoinResponseDto> joinTeam(@CurrentMember String username, @Valid @RequestBody TeamJoinRequestDto requestBody){
+    public SuccessResponse<TeamJoinResponseDto> joinTeam(@CurrentMember String username, @Valid @RequestBody TeamJoinRequestDto requestBody){
 
-        return Api.success(teamService.joinTeam(username, requestBody));
+        return new SuccessResponse<>(teamService.joinTeam(username, requestBody));
     }
 
     @GetMapping("/{id}")
-    Api<TeamJoinResponseDto> getTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
-        return Api.success(teamService.getTeam(username, teamId));
+    public SuccessResponse<TeamJoinResponseDto> getTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
+        return new SuccessResponse<>(teamService.getTeam(username, teamId));
     }
 
     @GetMapping
-    Api<TeamListResponseDto> getTeamList(@CurrentMember String username,
+    public SuccessResponse<TeamListResponseDto> getTeamList(@CurrentMember String username,
                                          @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
-        return Api.success(teamService.getTeamList(username, page));
+        return new SuccessResponse<>(teamService.getTeamList(username, page));
     }
 
     @PatchMapping("{id}")
-    Api<?> modifyTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
+    SuccessResponse<?> modifyTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         teamService.modifyTeam(username, teamId);
-        return Api.success(null);
+        return new SuccessResponse<>(null);
     }
 
     @DeleteMapping("{id}")
-    Api<TeamCreateResponseDto> removeTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
+    public SuccessResponse<TeamCreateResponseDto> removeTeam(@CurrentMember String username, @PathVariable("id") Long teamId) {
         teamService.removeTeam(username, teamId);
-        return Api.success(null);
+        return new SuccessResponse<>(null);
     }
 }

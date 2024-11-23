@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.net.MalformedURLException;
@@ -32,10 +33,16 @@ class S3ServiceTest {
     void s3Upload() throws MalformedURLException {
      //given
         MockMultipartFile mockFile = new MockMultipartFile(
-                "test", "test-image.jpg", "image/jpeg", "image content".getBytes()
+                "test", "test-audio.wav", MediaType.MULTIPART_FORM_DATA_VALUE, "audio content".getBytes()
         );
 
+        URL mockUrl = new URL("https://s3.amazonaws.com/bucket-name/test-audio.m4a");
+        Mockito.lenient().when(s3Service.uploadFile(mockFile)).thenReturn(mockUrl);
+
+        System.out.println("hi" + mockUrl.toString());
+
      //when
+
 
      //then
     }

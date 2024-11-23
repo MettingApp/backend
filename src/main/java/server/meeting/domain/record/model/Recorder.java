@@ -7,43 +7,34 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.URL;
-import org.springframework.context.annotation.Lazy;
 import server.meeting.domain.meeting.model.Meeting;
 import server.meeting.global.common.BaseEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Record extends BaseEntity {
+public class Recorder extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 사용자가 저장한 이름
     @NotNull
     @Size(max = 300)
     @Column(length = 300, nullable = false)
     private String fileName;
 
-    @NotNull
-    @Size(max = 100)
-    @Column(length = 100, nullable = false)
-    private String originalFileName;
-
+    // s3에 저장된 이름
     @NotNull
     @Column(length = 2083, nullable = false)
     private String recordFile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meeting_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private Meeting meeting;
 
     @Builder
-    public Record(String fileName, String originalFileName, String recordFile) {
-        Record.builder()
-                .fileName(fileName)
-                .originalFileName(originalFileName)
-                .recordFile(recordFile)
-                .build();
+    public Recorder(String fileName, String recordFile) {
+        this.fileName = fileName;
+        this.recordFile = recordFile;
     }
 }

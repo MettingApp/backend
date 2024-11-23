@@ -11,8 +11,8 @@ import server.meeting.domain.team.model.Team;
 import server.meeting.domain.team.repository.TeamRepository;
 import server.meeting.global.exception.ApiException;
 
-import static server.meeting.global.error.ErrorType._NOT_FOUND_MEMBER;
-import static server.meeting.global.error.ErrorType._NOT_FOUND_TEAM;
+import static server.meeting.global.exception.ErrorType._NOT_FOUND_MEMBER;
+import static server.meeting.global.exception.ErrorType._NOT_FOUND_TEAM;
 
 @Slf4j
 @Service
