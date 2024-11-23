@@ -6,10 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import server.meeting.domain.meeting.model.MeetingMembers;
 import server.meeting.domain.team.model.Team;
+import server.meeting.domain.team.model.TeamMember;
 import server.meeting.global.common.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -36,11 +39,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @OneToMany(mappedBy = "member", fetch = LAZY)
+    private List<TeamMember> teamMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(fetch = LAZY, mappedBy = "member")
     private List<MeetingMembers> meetingMembers = new ArrayList<>();
 
     private Member(Role role, String username, String password, String nickname, String name) {
@@ -55,8 +57,11 @@ public class Member extends BaseEntity {
         return new Member(role, username, password, nickname, name);
     }
 
-    public void linkTeam(Team team) {
-        this.team = team;
+    public void addTeamMember(TeamMember teamMember) {
+        if(!teamMembers.contains(teamMember)) {
+            return;
+        }
+        this.teamMembers.add(teamMember);
     }
 
 }

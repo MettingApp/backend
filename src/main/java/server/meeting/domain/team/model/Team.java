@@ -28,13 +28,15 @@ public class Team extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String description;
+
     @Column(nullable = false, unique = true)
     private String inviteCode;
 
-    @OneToMany(fetch = LAZY, mappedBy = "team")
-    private List<Member> members = new ArrayList<>();
+    @OneToMany(mappedBy = "team", fetch = LAZY)
+    private List<TeamMember> teamMembers = new ArrayList<>();
 
     private Long masterId;
 
@@ -45,7 +47,6 @@ public class Team extends BaseEntity {
                 .description(description)
                 .build();
 
-        team.connectMember(member);
         team.generateInviteCode();
         team.appointMasterTo(member);
 
@@ -59,13 +60,6 @@ public class Team extends BaseEntity {
         this.description = description;
     }
 
-    public void connectMember(Member member) {
-        if (member.getTeam() != null) {
-            return;
-        }
-        members.add(member);
-        member.linkTeam(this);
-    }
 
     private void generateInviteCode() {
         this.inviteCode = UUID.randomUUID().toString();
@@ -77,5 +71,12 @@ public class Team extends BaseEntity {
 
     public boolean isSameInviteCodeWith(String inviteCode) {
         return this.inviteCode.equals(inviteCode);
+    }
+
+    public void addTeamMember(TeamMember teamMember) {
+        if(!teamMembers.contains(teamMember)) {
+            return;
+        }
+        this.teamMembers.add(teamMember);
     }
 }
