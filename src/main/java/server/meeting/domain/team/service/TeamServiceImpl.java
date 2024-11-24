@@ -116,7 +116,7 @@ public class TeamServiceImpl implements TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new ApiException(_NOT_FOUND_TEAM));
 
-        List<String> nicknames = teamMemberRepository.findMemberNicknameByMemberId(teamId);
+        List<String> nicknames = teamMemberRepository.findMemberNicknameByTeamId(teamId);
 
         return new TeamDetailResponseDto(team.getName(), team.getTitle(), team.getDescription(), nicknames);
     }
@@ -126,10 +126,12 @@ public class TeamServiceImpl implements TeamService {
         Member member = memberRepository.findMemberByUsername(username)
                 .orElseThrow(() -> new ApiException(_NOT_FOUND_MEMBER));
 
-        List<String> nicknames = teamMemberRepository.findMemberNicknameByMemberId(member.getId());
+
         Page<Team> teamList = teamMemberRepository.findTeamsByMemberId(member.getId(), pageable);
-        Page<TeamListResponseDto> result = teamList.map(team -> new TeamListResponseDto(team.getId(), team.getName(),
-                team.getTitle(), nicknames));
+        Page<TeamListResponseDto> result = teamList.map(team -> {
+            List<String> nicknames = teamMemberRepository.findMemberNicknameByTeamId(team.getId());
+            return new TeamListResponseDto(team.getId(), team.getName(), team.getTitle(), nicknames);
+        });
         return result;
     }
 
