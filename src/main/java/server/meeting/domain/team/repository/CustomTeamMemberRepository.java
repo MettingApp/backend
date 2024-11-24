@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CustomTeamMemberRepository {
 
-    List<String> findMemberNicknameByMemberId(Long teamId);
+    List<String> findMemberNicknameByTeamId(Long teamId);
 
     Page<Team> findTeamsByMemberId(Long memberId, Pageable pageable);
 }

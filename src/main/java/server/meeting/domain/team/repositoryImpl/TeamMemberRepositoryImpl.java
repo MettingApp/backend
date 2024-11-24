@@ -32,7 +32,7 @@ public class TeamMemberRepositoryImpl implements CustomTeamMemberRepository {
 
 
     @Override
-    public List<String> findMemberNicknameByMemberId(Long teamId) {
+    public List<String> findMemberNicknameByTeamId(Long teamId) {
         QTeamMember qTeamMember = QTeamMember.teamMember;
         QMember qMember = member;
         QTeam qTeam = team;
